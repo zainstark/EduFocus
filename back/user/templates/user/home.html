@@ -36,6 +36,14 @@
       50% { border-color: white }
     }
   </style>
+  <script>
+    function logout() {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+      window.location.href = '/';
+    }
+  </script>
 </head>
 <body>
   <div class="typewriter">
@@ -44,6 +52,9 @@
   <div class="mt-4">
     <a href="{% url 'auth' %}" class="btn btn-light btn-lg mx-2">Get Started</a>
     <a href="#" class="btn btn-outline-light btn-lg mx-2">Watch Demo</a>
+  </div>
+  <div class="mt-4">
+    <button onclick="logout()" class="btn btn-light btn-lg mx-2">Logout</button>
   </div>
 </body>
 </html>
