@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.password_validation import validate_password
 
 User = get_user_model()
 
 class UserRegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
@@ -18,20 +18,28 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Email is already registered.")
+            raise serializers.ValidationError("This email is already registered.")
         return value
 
     def validate(self, data):
         if data['password'] != data['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+            raise serializers.ValidationError({"password": "Passwords do not match."})
+        
+        # Add more validations as needed
+        if len(data['password']) < 8:
+            raise serializers.ValidationError({"password": "Password must be at least 8 characters."})
+            
         return data
 
+    
     def create(self, validated_data):
+        password = validated_data.pop('password')
+        validated_data.pop('password2')
         user = User.objects.create_user(
             email=validated_data['email'],
             full_name=validated_data['full_name'],
             role=validated_data['role'],
-            password=validated_data['password']
+            password=password
         )
         return user
 

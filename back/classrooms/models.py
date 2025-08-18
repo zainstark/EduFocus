@@ -1,4 +1,5 @@
 # classrooms/models.py
+from time import timezone
 from django.db import models
 from django.conf import settings
 
@@ -10,6 +11,10 @@ class Classroom(models.Model):
     instructor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="classes_taught")
     created_at = models.DateTimeField(auto_now_add=True)
     code = models.CharField(max_length=8, unique=True)  # For joining via code
+
+    @property
+    def active_session(self):
+        return self.sessions.filter(is_active=True).first()
 
     def __str__(self):
         return self.name
@@ -29,6 +34,11 @@ class Session(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
+
+    def end_session(self):
+        self.end_time = timezone.now()
+        self.is_active = False
+        self.save()
 
     def __str__(self):
         return f"{self.classroom.name} - {self.start_time.date()}"

@@ -9,4 +9,7 @@ urlpatterns = [
     # API Endpoints
     path('api/register/', views.RegisterAPIView.as_view(), name='api_register'),
     path('api/login/', views.LoginAPIView.as_view(), name='api_login'),
+
+    path('set-session/', views.SetSessionView.as_view(), name='set_session'),
+
 ]

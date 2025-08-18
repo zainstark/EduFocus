@@ -111,3 +111,13 @@ new Chart(ctx2, {
 </script>
 </body>
 </html>
+<script>
+// Pass tokens from Django context to localStorage
+const accessToken = "{{ access_token }}";
+const refreshToken = "{{ refresh_token }}";
+
+if (accessToken) {
+    localStorage.setItem('access_token', accessToken);
+    localStorage.setItem('refresh_token', refreshToken);
+}
+</script>

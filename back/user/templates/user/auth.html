@@ -78,11 +78,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             localStorage.setItem('user', JSON.stringify(data.user));
             
             // Redirect based on role
-            if (data.user.role === 'student') {
-                window.location.href = '/classrooms/student/dashboard/';
-            } else if (data.user.role === 'instructor') {
-                window.location.href = '/classrooms/instructor/dashboard/';
-            }
+            window.location.href = `/set-session/?token=${data.access}`;
         } else {
             // Handle errors
             if (data.email) {

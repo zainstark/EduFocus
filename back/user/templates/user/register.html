@@ -11,7 +11,16 @@
         .role-card { cursor: pointer; transition: transform 0.2s; border: 2px solid transparent; height: 100%; }
         .role-card:hover { transform: scale(1.05); border-color: #0d6efd; }
         .role-card.active { border-color: #0d6efd; background-color: #e9f2ff; }
-        .error-message { color: #dc3545; font-size: 0.875em; }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.d-block {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -50,25 +59,26 @@
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
                                 <input type="text" class="form-control" name="full_name" required>
-                                <div class="error-message" id="full_name-error"></div>
+                                <div class="error-message text-danger" id="full_name-error"></div>
                             </div>
+                            
 
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-control" name="email" required>
-                                <div class="error-message" id="email-error"></div>
+                                <div class="error-message text-danger" id="email-error"></div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Password</label>
                                 <input type="password" class="form-control" name="password" required>
-                                <div class="error-message" id="password-error"></div>
+                                <div class="error-message text-danger" id="password-error"></div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Confirm Password</label>
                                 <input type="password" class="form-control" name="password2" required>
-                                <div class="error-message" id="password2-error"></div>
+                                <div class="error-message text-danger" id="password2-error"></div>
                             </div>
 
                             <div id="form-errors" class="alert alert-danger d-none"></div>
@@ -107,7 +117,10 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     e.preventDefault();
     
     // Clear previous errors
-    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    document.querySelectorAll('.error-message').forEach(el => {
+        el.textContent = '';
+        el.classList.remove('d-block');
+    });
     document.getElementById('form-errors').classList.add('d-none');
     
     const formData = {
@@ -128,39 +141,75 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         const data = await response.json();
         
         if (response.ok) {
-            // Store tokens and user data
+            // Success - redirect or show success message
             localStorage.setItem('access_token', data.access);
             localStorage.setItem('refresh_token', data.refresh);
             localStorage.setItem('user', JSON.stringify(data.user));
-            
-            // Redirect based on role
-            if (data.user.role === 'student') {
-                window.location.href = '/classrooms/student/dashboard/';
-            } else if (data.user.role === 'instructor') {
-                window.location.href = '/classrooms/instructor/dashboard/';
-            }
+
+    
+            // Redirect to set-session to establish Django session
+        
+            window.location.href = `/set-session/?token=${data.access}`
+        
         } else {
-            // Handle field errors
-            const fields = ['full_name', 'email', 'password', 'password2'];
-            fields.forEach(field => {
-                if (data[field]) {
-                    document.getElementById(`${field}-error`).textContent = data[field][0];
-                }
-            });
-            
-            // Handle non-field errors
-            if (data.non_field_errors || data.detail) {
-                document.getElementById('form-errors').textContent = 
-                    data.non_field_errors?.[0] || data.detail;
-                document.getElementById('form-errors').classList.remove('d-none');
-            }
+            // Handle different error types
+            handleRegistrationErrors(data, response.status);
         }
     } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('form-errors').textContent = 'An unexpected error occurred';
+        // Network errors
+        document.getElementById('form-errors').textContent = 
+            'Network error. Please check your connection and try again.';
         document.getElementById('form-errors').classList.remove('d-none');
     }
 });
+
+function handleRegistrationErrors(data, statusCode) {
+    const errorFields = ['full_name', 'email', 'password', 'password2', 'role'];
+    let hasFieldErrors = false;
+    
+    // 1. Handle field-specific errors
+    errorFields.forEach(field => {
+        const errorElement = document.getElementById(`${field}-error`);
+        if (data[field]) {
+            errorElement.textContent = data[field][0];
+            errorElement.classList.add('d-block');
+            hasFieldErrors = true;
+        }
+    });
+    
+    // 2. Handle non-field errors
+    if (data.non_field_errors) {
+        document.getElementById('form-errors').textContent = data.non_field_errors[0];
+        document.getElementById('form-errors').classList.remove('d-none');
+    } 
+    // 3. Handle 400 Bad Request (validation errors)
+    else if (statusCode === 400 && !hasFieldErrors) {
+        document.getElementById('form-errors').textContent = 
+            'Invalid data. Please check your inputs and try again.';
+        document.getElementById('form-errors').classList.remove('d-none');
+    }
+    // 4. Handle 401 Unauthorized
+    else if (statusCode === 401) {
+        document.getElementById('form-errors').textContent = 
+            'Registration failed: Unauthorized access. Please contact support.';
+        document.getElementById('form-errors').classList.remove('d-none');
+    }
+    // 5. Handle 500 Internal Server Error
+    else if (statusCode >= 500) {
+        document.getElementById('form-errors').textContent = 
+            'Server error. Please try again later.';
+        document.getElementById('form-errors').classList.remove('d-none');
+    }
+    // 6. Handle other errors
+    else if (data.detail) {
+        document.getElementById('form-errors').textContent = data.detail;
+        document.getElementById('form-errors').classList.remove('d-none');
+    } else {
+        document.getElementById('form-errors').textContent = 
+            'An unknown error occurred. Please try again.';
+        document.getElementById('form-errors').classList.remove('d-none');
+    }
+};
 </script>
 </body>
 </html>
