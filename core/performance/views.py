@@ -6,7 +6,7 @@ from django.db.models import Avg, Count
 from .models import Performance
 from .serializers import PerformanceCreateUpdateSerializer, PerformanceSerializer, PerformanceAggregateSerializer
 from session.models import Session
-from django.shortcuts import get_object_or_404 # ADD THIS IMPORT
+from django.shortcuts import get_object_or_404
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -15,7 +15,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Get the parent session_pk from the URL kwargs
         # 'session_session_pk' is the default lookup name for nested routers
-        session_pk = self.kwargs.get('session_session_pk') # CHANGE THIS LINE
+        session_pk = self.kwargs.get('session_pk') # Corrected to session_pk
         if session_pk:
             # Filter performances by the parent session
             return Performance.objects.filter(session__id=session_pk)
@@ -24,21 +24,22 @@ class PerformanceViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         # For students to submit their focus scores
         # Get the parent session_pk from the URL kwargs
-        session_pk = self.kwargs.get('session_session_pk') # ADD THIS LINE
-        session = get_object_or_404(Session, pk=session_pk) # ADD THIS LINE
+        session_pk = kwargs.get('session_pk') # Corrected to kwargs.get('session_pk')
+        session = get_object_or_404(Session, pk=session_pk)
 
         serializer = PerformanceCreateUpdateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(student=request.user, session=session) # CHANGE THIS LINE
+            serializer.save(student=request.user, session=session)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def aggregate(self, request, session_pk=None): # REMOVE session_pk=None from here
+    @action(detail=False, methods=['get'])
+    def aggregate(self, request, session_pk=None):
         # Get aggregate data for a session (for teacher dashboard)
         # The session_session_pk will be automatically passed by the nested router
-        session_pk = self.kwargs.get('session_session_pk') # ADD THIS LINE
+        # session_pk = self.kwargs.get('session_session_pk') # This line is now removed
 
-        session = get_object_or_404(Session, pk=session_pk) # CHANGE THIS LINE
+        session = get_object_or_404(Session, pk=session_pk)
         # Check if user is the instructor of this classroom
         if session.classroom.instructor != request.user:
             return Response(

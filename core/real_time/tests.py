@@ -7,6 +7,8 @@ from channels.testing import WebsocketCommunicator
 from django.test import TransactionTestCase
 from django.contrib.auth import get_user_model
 from core.asgi import application
+print(f"Type of application: {type(application)}")
+print(f"Application object: {application}")
 from rest_framework_simplejwt.tokens import RefreshToken
 from classrooms.models import Classroom, Enrollment
 from session.models import Session

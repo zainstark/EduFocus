@@ -17,16 +17,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 from session.views import SessionViewSet
+from performance.views import PerformanceViewSet
 
 router = DefaultRouter()
 router.register(r'session', SessionViewSet, basename='session')
 
+session_router = routers.NestedDefaultRouter(router, r'session', lookup='session')
+session_router.register(r'performances', PerformanceViewSet, basename='session-performances')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
     path('api/', include('classrooms.urls')),
     path('api/', include(router.urls)),
+    path('api/', include(session_router.urls)),
     path('api/', include('reports.urls')),
+    path('api/', include('notifications.urls')),
 ]

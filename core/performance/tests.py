@@ -73,7 +73,7 @@ class PerformanceViewSetTest(APITestCase):
 
     def test_student_can_submit_performance(self):
         self.client.force_authenticate(user=self.student)
-        url = f'/api/sessions/{self.session.id}/performances/'
+        url = f'/api/session/{self.session.id}/performances/'
         data = {
             'focus_score': 0.9
         }
@@ -88,13 +88,13 @@ class PerformanceViewSetTest(APITestCase):
             focus_score=0.8
         )
         self.client.force_authenticate(user=self.instructor)
-        url = f'/api/sessions/{self.session.id}/performances/aggregate/'
+        url = f'/api/session/{self.session.id}/performances/aggregate/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['avg_focus_score'], 0.8)
 
     def test_student_cannot_get_aggregate_performance(self):
         self.client.force_authenticate(user=self.student)
-        url = f'/api/sessions/{self.session.id}/performances/aggregate/'
+        url = f'/api/session/{self.session.id}/performances/aggregate/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

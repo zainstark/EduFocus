@@ -6,7 +6,7 @@ from session.models import Session
 class PerformanceCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Performance
-        fields = ['session', 'student', 'focus_score', 'attended']
+        fields = ['focus_score', 'attended']
         read_only_fields = ['student']
 
 class PerformanceSerializer(serializers.ModelSerializer):

@@ -356,14 +356,14 @@ class SessionConsumer(AsyncWebsocketConsumer):
             session = Session.objects.get(id=self.session_id)
             if self.user.role == 'instructor':
                 has_access = session.classroom.instructor == self.user
-                logger.info(f'Instructor access: {has_access}')
+                logger.info(f'Instructor access: {has_access}\r\n')
                 return has_access
             else:
                 has_access = Enrollment.objects.filter(
                     classroom=session.classroom, 
                     student=self.user
                 ).exists()
-                logger.info(f'Student access: {has_access}')
+                logger.info(f'Student access: {has_access}\r\n')
                 return has_access
         except Session.DoesNotExist:
             logger.error(f'Session {self.session_id} does not exist')
