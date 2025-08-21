@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: edufocus
+      POSTGRES_USER: edufocus
+      POSTGRES_PASSWORD: edufocus123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U edufocus"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Celery and Channels
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Django Web Application
+  web:
+    build: .
+    command: >
+      sh -c "cd core &&
+             python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn core.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - .:/app
+      - static_volume:/app/core/staticfiles
+      - media_volume:/app/core/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://edufocus:edufocus123@db:5432/edufocus
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Celery Worker
+  celery:
+    build: .
+    command: >
+      sh -c "cd core &&
+             celery -A core worker -l info"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://edufocus:edufocus123@db:5432/edufocus
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Celery Beat (for scheduled tasks)
+  celery-beat:
+    build: .
+    command: >
+      sh -c "cd core &&
+             celery -A core beat -l info"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://edufocus:edufocus123@db:5432/edufocus
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:

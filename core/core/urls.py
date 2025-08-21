@@ -20,15 +20,19 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers
 from session.views import SessionViewSet
 from performance.views import PerformanceViewSet
+from . import views # Import the views from the current app
+
 
 router = DefaultRouter()
-router.register(r'session', SessionViewSet, basename='session')
+router.register(r'sessions', SessionViewSet, basename='session')
 
-session_router = routers.NestedDefaultRouter(router, r'session', lookup='session')
+session_router = routers.NestedDefaultRouter(router, r'sessions', lookup='session')
 session_router.register(r'performances', PerformanceViewSet, basename='session-performances')
 
 urlpatterns = [
+    path('', views.index, name='index'), # Add this line to serve index.html at the root
     path('admin/', admin.site.urls),
+
     path('api/', include('users.urls')),
     path('api/', include('classrooms.urls')),
     path('api/', include(router.urls)),

@@ -1,4 +1,4 @@
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -14,11 +14,19 @@ from .serializers import (
 
 class AuthViewSet(viewsets.GenericViewSet):
     permission_classes = [AllowAny]
+
+    
+    def get_serializer_class(self):
+        if self.action == 'register':
+            return UserRegistrationSerializer
+        elif self.action == 'login':
+            return UserLoginSerializer
+        return UserLoginSerializer
     
     @action(detail=False, methods=['post'])
     def register(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
             return Response({

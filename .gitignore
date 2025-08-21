@@ -60,6 +60,16 @@ coverage.xml
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+media/
+staticfiles/
+static/
+!core/core/templates/
+!core/*/static/
+migrations/*.pyc
+migrations/__pycache__/
+
+# Django Secret Key (if stored in file)
+secret_key.txt
 
 # Flask stuff:
 instance/
@@ -84,14 +94,27 @@ ipython_config.py
 # pyenv
 .python-version
 
-# celery beat schedule file
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+Pipfile.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery stuff
 celerybeat-schedule
+celerybeat.pid
 
 # SageMath parsed files
 *.sage.py
 
 # Environments
 .env
+.env.local
+.env.*.local
 .venv
 env/
 venv/
@@ -117,6 +140,123 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
 # IDE settings
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Redis
+dump.rdb
+*.rdb
+
+# PostgreSQL
+*.sql
+*.dump
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Logs
+logs/
+*.log
+log/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# Node.js (if using for frontend assets)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Kubernetes
+*.yaml.local
+*.yml.local
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Local development
+.local/
+local_settings/
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+test-reports/
+test-results/
+
+# Documentation builds
+docs/_build/
+site/
+_site/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Profiling
+*.prof
+
+# Security
+*.pem
+*.key
+*.crt
+*.p12
+.secrets/
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*

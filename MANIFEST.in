@@ -1,0 +1,11 @@
+include README.md
+include LICENSE
+include CONTRIBUTING.md
+include requirements.txt
+include env.example
+include core/manage.py
+recursive-include core *.py
+recursive-include core/templates *
+recursive-include core/static *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
