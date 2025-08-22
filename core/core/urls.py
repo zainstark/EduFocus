@@ -30,7 +30,6 @@ session_router = routers.NestedDefaultRouter(router, r'sessions', lookup='sessio
 session_router.register(r'performances', PerformanceViewSet, basename='session-performances')
 
 urlpatterns = [
-    path('', views.index, name='index'), # Add this line to serve index.html at the root
     path('admin/', admin.site.urls),
 
     path('api/', include('users.urls')),

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFocus - Sessions</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="sessions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>EduFocus</span>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="dashboard_instructor.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="classrooms.html"><i class="fas fa-chalkboard"></i> Classrooms</a></li>
+                    <li><a href="sessions.html" class="active"><i class="fas fa-video"></i> Sessions</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <button class="user-button" id="userMenuButton">
+                    <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff" alt="User" class="user-avatar">
+                    <span id="userRole">User</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1>Sessions</h1>
+                    <p>Manage and join classroom sessions</p>
+                </div>
+                <div class="header-actions" id="instructorActions" style="display: none;">
+                    <button class="btn-primary" id="createSessionBtn">
+                        <i class="fas fa-plus"></i> New Session
+                    </button>
+                </div>
+            </div>
+
+            <div class="sessions-toolbar">
+                <div class="filter-group">
+                    <label for="classroomFilter">Classroom:</label>
+                    <select id="classroomFilter">
+                        <option value="">All Classrooms</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="scheduled">Scheduled</option>
+                        <option value="live">Live</option>
+                        <option value="paused">Paused</option>
+                        <option value="ended">Ended</option>
+                    </select>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search sessions...">
+                </div>
+            </div>
+
+            <div class="sessions-content">
+                <div class="loading-spinner" id="sessionsLoading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading sessions...</p>
+                </div>
+                <div id="sessionsList" class="sessions-list"></div>
+                <div id="noSessionsMessage" class="empty-state" style="display: none;">
+                    <i class="fas fa-video-slash"></i>
+                    <h3>No sessions found</h3>
+                    <p id="noSessionsText">You don't have any sessions yet</p>
+                    <div id="noSessionsAction"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Session Modal -->
+    <div class="modal-backdrop" id="createModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create New Session</h2>
+                <button class="modal-close" id="closeCreateModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createSessionForm">
+                    <div class="form-group">
+                        <label for="sessionClassroom" class="form-label">Classroom</label>
+                        <select id="sessionClassroom" class="form-select" required>
+                            <option value="">Select a classroom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionTitle" class="form-label">Session Title</label>
+                        <input type="text" id="sessionTitle" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionDescription" class="form-label">Description</label>
+                        <textarea id="sessionDescription" class="form-textarea" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Session Type</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="sessionType" value="instant" checked>
+                                <span class="radio-custom"></span>
+                                Start Immediately
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="sessionType" value="scheduled">
+                                <span class="radio-custom"></span>
+                                Schedule for Later
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="scheduledTimeGroup" style="display: none;">
+                        <label for="scheduledTime" class="form-label">Scheduled Time</label>
+                        <input type="datetime-local" id="scheduledTime" class="form-input">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelCreate">Cancel</button>
+                <button type="submit" form="createSessionForm" class="btn-primary" id="submitCreate">Create Session</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Actions Modal -->
+    <div class="modal-backdrop" id="actionsModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="actionsModalTitle">Session Actions</h2>
+                <button class="modal-close" id="closeActionsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="sessionDetails"></div>
+                <div class="action-buttons" id="sessionActions"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="closeActions">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="sessions.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFocus - Live Session</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="live_session.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webgazer@2.1.0/dist/webgazer.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>EduFocus</span>
+            </div>
+            <div class="session-info" id="sessionInfo">
+                <h2 id="sessionTitle">Loading session...</h2>
+                <div class="session-meta">
+                    <span id="classroomName"></span>
+                    <span id="sessionTimer">00:00:00</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-secondary" id="toggleSidebarBtn">
+                    <i class="fas fa-users"></i>
+                    <span id="participantCount">0</span>
+                </button>
+                <div class="user-menu">
+                    <button class="user-button" id="userMenuButton">
+                        <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff" alt="User" class="user-avatar">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" id="userDropdown">
+                        <a href="dashboard_instructor.html"><i class="fas fa-th-large"></i> Dashboard</a>
+                        <a href="#" id="leaveSessionBtn"><i class="fas fa-sign-out-alt"></i> Leave Session</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="live-session-container">
+        <div class="main-content">
+            <!-- Student View -->
+            <div id="studentView" style="display: none;">
+                <div class="video-container">
+                    <div class="video-header">
+                        <h3>Your Video Feed</h3>
+                        <div class="focus-score">
+                            <span>Focus Score:</span>
+                            <strong id="currentFocusScore">0%</strong>
+                        </div>
+                    </div>
+                    <div class="video-wrapper">
+                        <video id="webcamVideo" autoplay muted playsinline></video>
+                        <div class="video-overlay">
+                            <div class="focus-indicator" id="focusIndicator">
+                                <i class="fas fa-eye"></i>
+                                <span>Tracking Focus...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="btn-secondary" id="toggleVideoBtn">
+                            <i class="fas fa-video"></i>
+                            <span>Camera On</span>
+                        </button>
+                        <button class="btn-secondary" id="toggleAudioBtn">
+                            <i class="fas fa-microphone"></i>
+                            <span>Mic On</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="student-charts">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Your Focus Trend</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="studentFocusChart" width="400" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructor View -->
+            <div id="instructorView" style="display: none;">
+                <div class="class-overview">
+                    <div class="overview-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalParticipants">0</h3>
+                                <p>Participants</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="avgClassFocus">0%</h3>
+                                <p>Avg. Focus</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="focusTrend">Stable</h3>
+                                <p>Focus Trend</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="session-controls">
+                        <button class="btn-secondary" id="pauseSessionBtn">
+                            <i class="fas fa-pause"></i>
+                            <span>Pause Session</span>
+                        </button>
+                        <button class="btn-danger" id="endSessionBtn">
+                            <i class="fas fa-stop"></i>
+                            <span>End Session</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="instructor-charts">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Class Focus Overview</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="classFocusChart" width="400" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Participants</h3>
+                <button class="btn-text" id="closeSidebarBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="participant-list" id="participantList">
+                    <!-- Participants will be added here dynamically -->
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Webcam Setup Modal -->
+    <div class="modal-backdrop" id="webcamModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Webcam Access Required</h2>
+            </div>
+            <div class="modal-body">
+                <p>EduFocus needs access to your webcam to analyze your focus during this session. Your video is only used for focus analysis and is not stored or shared.</p>
+                <div class="permission-options">
+                    <button class="btn-primary" id="allowWebcamBtn">
+                        <i class="fas fa-camera"></i>
+                        Allow Webcam Access
+                    </button>
+                    <button class="btn-secondary" id="continueWithoutWebcamBtn">
+                        Continue Without Webcam
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session End Modal -->
+    <div class="modal-backdrop" id="endSessionModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>End Session</h2>
+                <button class="modal-close" id="closeEndSessionModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to end this session? This action cannot be undone.</p>
+                <div class="form-group">
+                    <label for="sessionNotes" class="form-label">Session Notes (Optional)</label>
+                    <textarea id="sessionNotes" class="form-textarea" rows="3" placeholder="Add any notes about this session..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelEndSession">Cancel</button>
+                <button type="button" class="btn-danger" id="confirmEndSession">End Session</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/websocket.js"></script>
+    <script src="live_session.js"></script>
+</body>
+</html>

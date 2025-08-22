@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFocus - Student Dashboard</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>EduFocus</span>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="dashboard_student.html" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="classrooms.html"><i class="fas fa-chalkboard"></i> Classrooms</a></li>
+                    <li><a href="sessions.html"><i class="fas fa-video"></i> Sessions</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <button class="user-button" id="userMenuButton">
+                    <img src="https://ui-avatars.com/api/?name=Student+User&background=2563eb&color=fff" alt="User" class="user-avatar">
+                    <span>Student</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1>Dashboard</h1>
+                <p>Welcome back! Here's an overview of your classes and progress.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chalkboard"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="classroomsCount">0</h3>
+                        <p>Enrolled Classes</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="sessionsCount">0</h3>
+                        <p>Active Sessions</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="attendanceRate">0%</h3>
+                        <p>Attendance Rate</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avgFocusScore">0%</h3>
+                        <p>Avg. Focus Score</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <div class="content-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Available Sessions</h2>
+                            <button class="btn-secondary" id="refreshSessionsBtn">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="loading-spinner" id="sessionsLoading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading sessions...</p>
+                            </div>
+                            <div id="availableSessionsList" class="sessions-list"></div>
+                            <div id="noSessionsMessage" class="empty-state" style="display: none;">
+                                <i class="fas fa-video-slash"></i>
+                                <p>No available sessions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Your Focus Trends</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="focus-chart-container">
+                                <canvas id="focusChart" width="400" height="250"></canvas>
+                            </div>
+                            <div class="focus-stats">
+                                <div class="focus-stat">
+                                    <span class="stat-label">Today's Average</span>
+                                    <span class="stat-value" id="todayFocus">0%</span>
+                                </div>
+                                <div class="focus-stat">
+                                    <span class="stat-label">Weekly Average</span>
+                                    <span class="stat-value" id="weeklyFocus">0%</span>
+                                </div>
+                                <div class="focus-stat">
+                                    <span class="stat-label">Best Session</span>
+                                    <span class="stat-value" id="bestFocus">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Your Classes</h2>
+                            <a href="classrooms.html" class="btn-secondary">
+                                <i class="fas fa-plus"></i> Join Class
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="loading-spinner" id="classroomsLoading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading classes...</p>
+                            </div>
+                            <div id="classroomsList" class="classrooms-list"></div>
+                            <div id="noClassroomsMessage" class="empty-state" style="display: none;">
+                                <i class="fas fa-chalkboard"></i>
+                                <p>You haven't joined any classes yet</p>
+                                <a href="classrooms.html" class="btn-primary">Join a Class</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Upcoming Sessions</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="loading-spinner" id="upcomingLoading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading upcoming sessions...</p>
+                            </div>
+                            <div id="upcomingSessionsList" class="upcoming-list"></div>
+                            <div id="noUpcomingMessage" class="empty-state" style="display: none;">
+                                <i class="fas fa-calendar-times"></i>
+                                <p>No upcoming sessions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="dashboard_student.js"></script>
+</body>
+</html>
