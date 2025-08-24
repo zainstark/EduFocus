@@ -20,7 +20,6 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers
 from session.views import SessionViewSet
 from performance.views import PerformanceViewSet
-from . import views # Import the views from the current app
 
 
 router = DefaultRouter()

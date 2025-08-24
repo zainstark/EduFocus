@@ -3,23 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduFocus - Home</title>
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="login.css">
-    <link rel="stylesheet" href="register.css">
+    <title>EduFocus - Focus-Enhanced Learning Platform</title>
+    <link rel="stylesheet" href="index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="login.html">Login</a></li>
-            <li><a href="register.html">Register</a></li>
-        </ul>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>EduFocus</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="login.html" class="nav-btn nav-login">Login</a>
+                <a href="register.html" class="nav-btn nav-signup">Sign Up</a>
+            </div>
+            <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
     </nav>
-    <main>
-        <h1>Welcome to EduFocus</h1>
-        <p>Please <a href="login.html">Login</a> or <a href="register.html">Register</a> to continue.</p>
-    </main>
-    <script src="login.js"></script>
-    <script src="register.js"></script>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Transform Learning with <span class="highlight">Real-Time Focus Tracking</span></h1>
+                <p class="hero-subtitle">EduFocus helps educators monitor student engagement and generate detailed performance reports through live session management and focus analytics.</p>
+                <div class="hero-buttons">
+                    <a href="register.html?role=student" class="btn btn-primary">Join as Student</a>
+                    <a href="register.html?role=instructor" class="btn btn-secondary">Start Teaching</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="dashboard-preview">
+                    <div class="preview-header">
+                        <div class="preview-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="preview-content">
+                        <div class="focus-chart">
+                            <div class="chart-bars">
+                                <div class="bar" style="height: 60%"></div>
+                                <div class="bar" style="height: 80%"></div>
+                                <div class="bar" style="height: 45%"></div>
+                                <div class="bar" style="height: 90%"></div>
+                                <div class="bar" style="height: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="session-info">
+                            <div class="session-item">
+                                <i class="fas fa-users"></i>
+                                <span>24 Students Online</span>
+                            </div>
+                            <div class="session-item">
+                                <i class="fas fa-clock"></i>
+                                <span>45:32 Session Time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="features-container">
+            <h2 class="section-title">Powerful Features for Modern Education</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Real-Time Focus Tracking</h3>
+                    <p>Monitor student engagement levels with live focus score updates and attention analytics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Live Session Management</h3>
+                    <p>Create and manage interactive classroom sessions with WebSocket-powered real-time communication.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Detailed Reports</h3>
+                    <p>Generate comprehensive performance reports with visualizations and attendance tracking.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Classroom Management</h3>
+                    <p>Easy enrollment system with join codes and role-based access for instructors and students.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Interactive Communication</h3>
+                    <p>Built-in chat system and real-time notifications to keep everyone connected.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Responsive Design</h3>
+                    <p>Access your classrooms from any device with our fully responsive web application.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="how-container">
+            <h2 class="section-title">How EduFocus Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Create Your Account</h3>
+                        <p>Sign up as an instructor to create classrooms or as a student to join sessions.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Set Up Classrooms</h3>
+                        <p>Instructors create classrooms and share join codes with students for easy enrollment.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Start Live Sessions</h3>
+                        <p>Begin interactive sessions with real-time focus tracking and student participation.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Analyze Performance</h3>
+                        <p>Review detailed reports with focus analytics and attendance data after each session.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="about-container">
+            <div class="about-content">
+                <h2 class="section-title">About EduFocus</h2>
+                <p class="about-text">EduFocus is a cutting-edge educational platform designed to enhance learning outcomes through real-time student engagement monitoring. Our platform provides educators with powerful tools to track focus levels, manage live sessions, and generate comprehensive performance analytics.</p>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number">Real-time</div>
+                        <div class="stat-label">Focus Tracking</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">Live</div>
+                        <div class="stat-label">Session Management</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">Detailed</div>
+                        <div class="stat-label">Analytics Reports</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-container">
+            <h2>Ready to Transform Your Classroom?</h2>
+            <p>Join thousands of educators using EduFocus to improve student engagement and learning outcomes.</p>
+            <div class="cta-buttons">
+                <a href="register.html" class="btn btn-primary btn-large">Get Started Free</a>
+                <a href="login.html" class="btn btn-secondary btn-large">Sign In</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>EduFocus</span>
+                    </div>
+                    <p>Enhancing education through real-time focus tracking and analytics.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Platform</h4>
+                        <ul>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#about">About</a></li>
+                            <li><a href="login.html">Login</a></li>
+                            <li><a href="register.html">Sign Up</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EduFocus. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="index.js"></script>
 </body>
 </html>
